@@ -9,9 +9,8 @@ from db.operations import add_order, add_customer, get_order_by_id, get_customer
 from db.serialisation import serialise_order, serialise_customer
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'fhs874%^&$7548o93htuherwgjgd'
-app.secret_key = "ffajksh47%$jflks^4fsl"
 
+# set secret key via environment variables
 
 # Loads menu items from csv file at server startup
 @app.before_first_request

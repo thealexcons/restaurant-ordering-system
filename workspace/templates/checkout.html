@@ -1,0 +1,92 @@
+<!-- Load base template from base.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        
+        <div class="col-sm-8">
+            <div class="container">
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            Checkout
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        
+                        {% with errors = get_flashed_messages() %}
+                          {% if errors %}
+                            <ul class=flashes>
+                            {% for e in errors %}
+                              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                  {{ e }}
+                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                            {% endfor %}
+                            </ul>
+                          {% endif %}
+                        {% endwith %}
+                        
+                        <form action="{{ url_for("process_checkout") }}" method="POST">
+                            <div class="form-group">
+                                <label for="name">First Name</label>
+                                <input type="text" class="form-control" name="firstName" placeholder="Enter your first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Surname</label>
+                                <input type="text" class="form-control" name="surname" placeholder="Enter your surname" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactNumber">Contact Telephone Number</label>
+                                <input type="tel" class="form-control" name="contactNumber" placeholder="Enter your preferred telephone number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="categorySelect">Takeaway or Eat-in?</label>
+                                <select class="form-control" name="category" id="categorySelect" required>
+                                    <option>Takeaway</option>
+                                    <option>Eat-in</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Order</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-4" style="position: fixed; right:0;">                        
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Cart</h5>
+                        <div class="card-text" >
+                            {% if total != 0 %} 
+                                <ul style="padding-left:8%;">
+                                    {% for item in cart %}
+                                    <li>
+                                        <form action="{{ url_for("remove_item") }}" method="POST">
+                                            {{ item[0] }} {% if item[1] != "1" %}(x{{ item[1] }}){% endif %}
+                                            <input type="submit" class="btn btn-danger btn-sm" value="X" style="font-size: 60%; padding: 5px;">
+                                            <input name="food" value="{{ item[0] }}" hidden>
+                                        </form>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                <p><b>Total: £{{ total|price_format }}</b></p>
+                            {% else %}
+                                <p>Your cart is currently empty.</p>
+                            {% endif %}
+                        </div>
+                </div>
+                
+                
+            </div>
+        </div>
+        
+    </div>
+    
+    
+{% endblock %}

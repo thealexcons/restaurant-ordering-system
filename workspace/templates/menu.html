@@ -1,0 +1,109 @@
+<!-- Load base template from base.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        
+        <div class="col-sm-8">
+            <div class="container">
+                
+                {% for category in categories %}
+                    <div class="card">
+                        <div class="card-header" id="{{ category|lower_strip }}">
+                            <a name="{{ category|lower_strip }}"></a>
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse{{ category|lower_strip }}" aria-expanded="true" aria-controls="collapse{{ category|lower_strip }}">
+                                    {{ category }}
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapse{{ category|lower_strip }}" class="collapse show" aria-labelledby="{{ category|lower_strip }}" data-parent="#accordion">
+                            <div class="card-body">
+                                <ul class="list-group">
+                                    {% for item in foods[category] %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            
+                                            <div class="col-sm-8" style="text-align: left;">
+                                                {{ item[0] }} - £{{ item[2] }} 
+                                            </div>
+                                            
+                                            <div class="col-sm-4" style="text-align: right;">
+                                                <div class="input-group float-sm-right">
+                                                    <form action="{{ url_for("add_item") }}" method="POST">
+                                                        <div class="btn-group float-sm-right" role="group">
+                                                            <button type="button" data-toggle="modal" data-target="#{{ item[0]|lower_strip }}Modal" class="btn btn-secondary btn-sm"> Info</button>
+                                                            <input type="submit" class="btn btn-primary btn-sm" name="{{ item[0] }}" value="Add to Cart">
+                                                        </div>
+                                                        <input type="number" name="quantity" class="form-control form-control-sm" style="max-width: 40px;" min="1" value="1">
+                                                        <input name="food" value="{{ item[0] }}" hidden>
+                                                    </form>
+                                                </div> 
+                                            </div>
+                                            
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                
+            </div>
+        </div>
+        
+        <div class="col-sm-4" style="position: fixed; right:0;">                        
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Cart</h5>
+                        <div class="card-text" >
+                            {% if total != 0 %} 
+                                <ul style="padding-left:8%;">
+                                    {% for item in cart %}
+                                    <li>
+                                        <form action="{{ url_for("remove_item") }}" method="POST">
+                                            {{ item[0] }} {% if item[1] != "1" %}(x{{ item[1] }}){% endif %}
+                                            <input type="submit" class="btn btn-danger btn-sm" value="X" style="font-size: 60%; padding: 5px;">
+                                            <input name="food" value="{{ item[0] }}" hidden>
+                                        </form>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                <p><b>Total: £{{ total|price_format }}</b></p>
+                            {% else %}
+                                <p>Your cart is currently empty.</p>
+                            {% endif %}
+                        </div>
+                        {% if total != 0 %}<a href="{{ url_for("checkout") }}" role="button" class="btn btn-primary btn-lg btn-block">Checkout</a>{% endif %}
+                </div>
+                
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Menu</h5>
+                        <div class="card-text">
+                            <ul style="list-style: none;padding-left:0;">
+                                <li><a href="#expressLunch">Express Lunch</a></li>
+                                <li><a href="#paninis">Panini</a></li>
+                                <li><a href="#vegetarianwraps">Vegetarian Wraps</a></li>
+                                <li><a href="#meatwraps">Meat Wraps</a></li>
+                                <li><a href="#sideorders">Side Orders</a></li>
+                                <hr>
+                                <li><a href="#colddrinks">Cold Drinks</a></li>
+                                <li><a href="#hotdrinks">Hot Drinks</a></li>
+                                <li><a href="#smoothies">Smoothies</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+    
+    <!-- Include the modals from the food_modals.html file -->
+    {% include 'food_modals.html' %}
+
+    
+{% endblock %}

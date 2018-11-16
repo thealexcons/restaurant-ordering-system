@@ -1,0 +1,21 @@
+<!-- Load base template from base.html -->
+{% extends "base.html" %}
+
+{% block content %}    
+    
+    <div class="row">
+        
+        <div class="col">
+			<div class="card" width="100%">
+				<div class="card-body">
+					<h2 class="card-title">Your order has been confirmed (reference no.: {{ order_id }})</h2>
+					<p class="card-text">
+						Thank you for submitting an order. Please arrive shortly to the restaurant to collect your order.
+					</p>
+				</div>
+			</div>
+		</div>
+        
+    </div>
+    
+{% endblock %}

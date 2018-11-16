@@ -1,2 +1,3 @@
 # restaurant-ordering-system
-Restaurant ordering web app in Flask for my a level
+
+This is the web app for my restaurant ordering system project. Made with Flask and Bootstrap.
